@@ -1,0 +1,60 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include "sms.h"
+using namespace std;
+
+class Logger{
+	public:
+		virtual void writeLog(std::string s)=0;
+};
+
+
+class SMSLogger:public Logger {  // 인터페이스 단일 상속
+	public:
+		SMSLogger( std::string phone ){
+			phone_ = phone;
+		}
+		void writeLog(std::string s){
+		msgsnder_ -> send(phone_,s);
+		}
+		//  writeLog 함수를 구현
+	private:
+		string phone_;
+		MsgSender * msgsnder_;
+		// Object adapter이므로 MsgSender의 instance가 필요.
+};
+
+
+class App{
+		Logger *mylogger;
+	public:
+		App(Logger *pl){  mylogger = pl ; }
+		void start(){
+			mylogger->writeLog("oopa27 윤동주 Object Adapter.");
+			// 홍길동 대신에 여러분의 계정번호 이름을 여기에 넣으세요
+		}
+};
+
+int main(){
+	App *r1;
+	
+	r1 = new App(new SMSLogger("01085784321"));
+	r1->start();
+}
+//smslogger.h
+#ifndef _SMS_H
+#define _SMS_H
+#include <iostream>
+using namespace std;
+class MsgSender{
+	protected:
+
+	public:
+		// 생성자에서 메시지를 받을 전화번호를 설정한다.
+		MsgSender();
+
+		// 메시지를 보내는 함수
+		void send(std::string phone, std::string message);
+};
+#endif
