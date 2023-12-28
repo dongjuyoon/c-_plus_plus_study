@@ -1,0 +1,78 @@
+#include <iostream>
+
+
+using namespace std;
+class Complex{
+	public:
+		void setValue(double n1, double n2){
+			real_ = n1;
+			fake_ = n2;
+		
+		}
+
+		double getreal(){
+			return real_;
+		}
+		double getfake(){
+			return fake_;
+		}
+
+		Complex & addTo( Complex  a){
+			real_ += a.getreal();
+			fake_ += a.getfake();
+			
+		}
+		void print(){
+			cout << real_ << "+" << fake_ << "i" << endl; 
+		}
+
+
+
+
+		double real_;
+		double fake_;
+};
+
+
+Complex add( Complex a, Complex b){
+	Complex temp;
+	temp.setValue( a.real_ + b.real_,a.fake_ + b.fake_);
+
+	return temp;
+}
+
+Complex sub(Complex& a, Complex & b){
+	Complex temp;
+	temp.setValue( a.real_ - b.real_,a.fake_ - b.fake_);
+
+	return temp;
+}
+
+
+
+
+
+int main(){
+	Complex a, b, c, d;
+	a.setValue(1.1, 2.2);   // 이것은 1.1 + 2.2i 라는 뜻.
+	b.setValue(2.2, 3.3);
+
+	c = add(a, b);  // add는 global 함수이다. 작성하라. 실수부는 실수부끼리, 허수부는 허수부끼리 더한다.
+
+	a.addTo(b);  //  a에 b를 더한다.
+
+	d = sub(a, b);  // 뺄셈을 나타내는 global 함수. a 에서 b를 뺀다.
+
+	cout << "a = " ;
+	a.print();   // 자기 자신의 값을 복소수 형태로 출력하라.
+	cout << "c = " ;
+	c.print();
+	cout << "d = ";   // 추가. 2017.9.28.
+	d.print();      // 추가. 2017.9.28.
+
+	a.addTo(a).addTo(b).addTo(c);  // 개념적으로 말하자면 a += a; a+= b; a+= c;
+	cout << "a = ";
+	a.print();
+
+}
+
