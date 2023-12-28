@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+class Item{
+   public:
+      Item *next_;
+      int data_;
+
+
+      Item(int p){
+         data_ = p;
+         next_ = nullptr;
+      }
+};
+
+class OrderedList{
+   public:
+      Item *first_;
+      OrderedList(){
+         first_ = nullptr;
+      }
+      void add(int plus){
+         if(first_ == nullptr || first_ -> data_ > plus){
+            Item *k;
+            k = new Item(plus);
+            k -> next_ = first_;
+            first_ = k;
+         }else{
+            Item *t;
+            t = new Item(plus);
+            Item *q;
+            q = first_;
+            while(q -> next_ && q -> next_ -> data_ < plus){ // q -> next_ 쓰는 이유 다시 생각해보기.
+               q = q -> next_;
+            }
+            t -> next_ = q -> next_;
+            q-> next_ = t;
+
+         }
+      }
+      void print(){
+         Item *y;
+         y = first_;
+         while( y ){
+            cout << y -> data_ << endl;
+             y = y -> next_;
+         }
+      }
+};
+int main(){
+   OrderedList myList;
+
+   int n;
+   while ( cin >> n ){
+      myList.add(n);
+   }
+
+   myList.print();  // 순서대로 출력한다. 항목간에는 줄바꿈으로 구분.
+   return 0;
+}
