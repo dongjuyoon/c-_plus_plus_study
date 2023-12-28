@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+class Animal{
+	public:
+		Animal(){};
+		virtual void speak(){
+			cout << "Animal" << endl;
+		}
+};
+class Dog : public Animal{
+	public:
+		Dog(){};
+	void speak(){
+		cout << "멍멍" <<endl;
+	}
+};
+class Cat : public Animal{
+	public:
+		Cat(){};
+	void speak(){
+		cout << "야옹" <<endl;
+	}
+};
+int main(){
+	Animal * animal[5];
+	Dog * d = new Dog;
+	Cat * c = new Cat;
+	animal[0] = d;
+	animal[1] = c;
+	animal[2] = d;
+	animal[3] = c;
+	animal[4] = d;
+
+	
+	for (int i=0; i<5; i++){
+		animal[i]->speak();
+	}
+}
