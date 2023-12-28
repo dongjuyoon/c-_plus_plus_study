@@ -1,0 +1,105 @@
+//boy.cpp
+#include <iostream>
+#include "boy.h"
+#include <string>
+using namespace std;
+Boy::Boy(){
+
+}
+Boy::Boy(string name){
+	name_ = name;
+}
+void Boy::setGirlFriend(Girl *g){
+	girl_friend_ = g;
+}
+
+string Boy::getname(){
+	return name_;
+}
+void Boy::sayHello(){
+	cout << "나는 " << name_ << " 입니다." <<"내 여자친구는 " << girl_friend_ -> getname() << "입니다." <<endl;
+}
+
+
+//boy.h
+#ifndef BOY_H
+#define BOY_H
+#include <string>
+#include "girl.h"
+using namespace std;
+class Girl;
+class Boy{
+	public:
+	Boy();
+	Boy(string name);
+	void setGirlFriend(Girl *);
+	void sayHello();
+	string getname();
+	private:
+	 string name_;
+	 Girl * girl_friend_;
+};
+#endif
+
+//girl.cpp
+#include <iostream>
+#include "girl.h"
+#include <string>
+using namespace std;
+Girl::Girl(){
+
+}
+
+Girl::Girl(string name){
+	name_=name;
+}
+void Girl::setBoyFriend(Boy * b){
+	boy_friend_ = b;
+}
+void Girl::sayHello(){
+	cout << "나는 " << name_ << " 입니다." <<"내 남자친구는 " << boy_friend_ -> getname() << "입니다." <<endl;
+
+}
+void Girl::changeName(string name){
+	name_ = name;
+}
+string Girl::getname(){
+	return name_;
+}
+
+
+//girl.h
+#ifndef GIRL_H
+#define GIRL_H
+#include <string>
+#include "boy.h"
+using namespace std;
+class Boy;
+class Girl{
+	public:
+		Girl();
+		Girl(string name);
+		void setBoyFriend(Boy *);
+		void sayHello();
+		void changeName(string name);
+		string getname();
+	private:
+		string name_;
+		Boy * boy_friend_;
+};
+#endif
+
+//main.cpp
+#include <iostream>
+using namespace std;
+#include "boy.h"
+#include "girl.h"
+int main(){
+	Boy *b = new Boy("김철수");
+	Girl *g = new Girl("박영은");
+	b->setGirlFriend(g);  g->setBoyFriend(b);
+	b->sayHello();  
+	g->sayHello();
+	g->changeName("박지선");
+	b->sayHello();  // 자동으로 여친 이름이 바뀌어야 한다.
+}
