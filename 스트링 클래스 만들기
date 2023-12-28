@@ -1,0 +1,97 @@
+#include <iostream>
+#include <cstring>
+
+class MyString {
+private:
+    char* str;
+
+public:
+    // 기본 생성자
+    MyString() : str(nullptr) {}
+
+    // 문자열을 받는 생성자
+    MyString(const char* s) {
+        if (s) {
+            str = (char*)malloc(strlen(s) + 1);
+            strcpy(str, s);
+        } else {
+            str = nullptr;
+        }
+    }
+
+    // 복사 생성자
+    MyString(const MyString& other) {
+        if (other.str) {
+            str = (char*)malloc(strlen(other.str) + 1);
+            strcpy(str, other.str);
+        } else {
+            str = nullptr;
+        }
+    }
+
+    // 소멸자
+    ~MyString() {
+        printf("free %p \n", str);  // 주소 값을 출력
+        free(str);
+    }
+
+    // 대입 연산자 오버로딩
+    MyString& operator=(const MyString& other) {
+        if (this != &other) {
+            free(str);
+
+            if (other.str) {
+                str = (char*)malloc(strlen(other.str) + 1);
+                strcpy(str, other.str);
+            } else {
+                str = nullptr;
+            }
+        }
+
+        return *this;
+    }
+
+    // += 연산자 오버로딩
+    MyString& operator+=(const MyString& other) {
+        if (other.str) {
+            char* temp = (char*)malloc(strlen(str) + strlen(other.str) + 1);
+            strcpy(temp, str);
+            strcat(temp, other.str);
+
+            free(str);
+            str = temp;
+        }
+
+        return *this;
+    }
+
+    // << 연산자 오버로딩 (멤버 함수로 정의)
+    std::ostream& operator<<(std::ostream& os) const {
+        if (str) {
+            os << str;
+        }
+        return os;
+    }
+};
+
+// << 연산자 오버로딩 (전역 함수로 정의)
+std::ostream& operator<<(std::ostream& os, const MyString& s) {
+    return s.operator<<(os);
+}
+
+int main() {
+    MyString s1, s2("world");
+    MyString s3;
+
+    s1 = "Hello ";
+    s3 = s1;
+    s3 += s2;
+
+    std::cout << s1 << " " << s2 << " " << s3;
+
+    return 0;
+}
+
+
+
+
