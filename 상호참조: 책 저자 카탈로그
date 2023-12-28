@@ -1,0 +1,216 @@
+//book.cpp
+#include <iostream>
+#include "book.h"
+#include "person.h"
+#include <string>
+using namespace std;
+Book::Book(){
+
+	// Default 생성자
+}
+
+Book::Book(Person *p,string num, string name){
+	person_ = p;
+	num_ = num;
+	name_ = name;
+	person_ -> addBook(this);
+}
+Book::Book(Person *p,string num){
+	person_ = p;
+	num_ = num;
+	name_ = "제목 미정";
+	person_ -> addBook(this);
+}
+
+string Book::getPersonName(){
+	return person_ -> returnPersonName();
+}
+
+string Book::getPersonNum(){
+	return person_ -> returnPersonNum();
+}
+
+string Book::getBookName(){
+	return name_;
+}
+string Book::getBookNum(){
+	return num_;
+}
+
+//book.h
+#ifndef _BOOK_H_
+#define _BOOK_H_
+#include <string>
+#include "person.h"
+using namespace std;
+class Person;
+class Book {
+	// 공개 메소드
+	public:	
+		Book();  // 기본 생성자.			
+		Book(Person *,string num, string name);
+		Book(Person *,string num);
+		string getPersonName();
+		string getPersonNum();
+		string getBookName();
+		string getBookNum();
+		// 상속할 함수 및 변수
+	protected:
+
+		// 멤버 변수 및 비공개 함수
+	private:
+		Person * person_;
+		string num_;
+		string name_;
+
+};
+#endif
+
+//catalog.cpp
+#include <iostream>
+#include "catalog.h"
+#include <string>
+using namespace std;
+Catalog::Catalog(){
+	// Default 생성자
+}
+Catalog::Catalog(string name){
+	name_ =name;
+	numbook_ =0;
+}
+void Catalog::addBook(Book * b){
+	book_[numbook_++] = b;
+}
+void Catalog::summary(){
+	cout << "카탈로그 이름:"<< name_ << endl << "총 " << numbook_ <<"의 책이 있습니다." << endl ;
+
+
+	for( int i = 0 ; i<numbook_ ; i++){
+		cout << "도서 명:" << book_[i] -> getBookName() << endl;
+		cout << "저자 : " << book_[i] -> getPersonName() <<" " << book_[i] -> getPersonNum()<<endl; 
+		cout << "도서 번호: " << book_[i] -> getBookNum() << endl;
+		cout << endl;
+	}
+}
+
+//catalog.h
+#ifndef _CATALOG_H_
+#define _CATALOG_H_
+#include <string>
+#include "book.h"
+using namespace std;
+class Book;
+class Catalog {
+	// 공개 메소드
+	public:	
+		Catalog();  // 기본 생성자.
+		Catalog(string name);
+		void addBook(Book *);
+		void summary();
+	// 상속할 함수 및 변수
+	protected:
+
+	// 멤버 변수 및 비공개 함수
+	private:
+		string name_;
+		Book * book_[100];
+		int numbook_=0;
+};
+#endif
+
+//main.cpp
+#include <iostream>
+#include "book.h"
+#include "person.h"
+#include "catalog.h"
+
+#include <string>
+using namespace std;
+int main(){
+	Catalog *ct = new Catalog("교보카탈로그"); 
+	Person * p1 = new Person("김작가", "980101-1000111");  // 이름 및 주민번호
+	Person * p2 = new Person("배작가", "980102-1000222");
+	
+	Book *a1, *a2, *a3;
+	a1 = new Book(p1, "111-22-3333", "생의 주변에서") ;   // 파라메터는 저자*  ISBN, 제목
+	a2 = new Book(p1, "111-22-4444", "까라마조프가의 자매들") ;    
+	a3 = new Book(p2, "111-55-5555") ;    //  책 제목이 없으면 "제목 미정"으로 해준다.
+
+	ct->addBook(a1);
+	ct->addBook(a2);
+	ct->addBook(a3);
+
+	std::cout << "================================" << std::endl;
+	ct->summary(); // 카탈로그명, 등록된 모든  도서 정보(도서명, ISBN, 저자명) 출력
+	std::cout << "================================" << std::endl;
+	p1->summary(); // 각 개인의 정보(이름, 주민번호) 및 본인 저작 도서 정보를 출력한다.
+	std::cout << "================================" << std::endl;
+	p1->changeName("허균");
+	ct->summary();
+	std::cout << "================================" << std::endl;
+}
+
+//person.cpp
+#include <iostream>
+#include <string>
+#include "person.h"
+using namespace std;
+Person::Person(){
+	// Default 생성자
+}
+Person::Person(string name,string num){
+	name_ = name;
+	num_ = num;
+	numbook_ =0;
+}
+void Person::summary(){
+	cout << name_ <<num_<<endl;
+	for (int i = 0; i < numbook_; i++) {
+		cout << "도서명: " << book_[i]->getBookName() << endl;
+		cout << "저자: " << book_[i]->getPersonName() << " " << book_[i]->getPersonNum() << endl ;
+		cout << "도서 번호: " << book_[i]->getBookNum()<< endl ;
+		cout << endl;
+	}
+}
+void Person::changeName(string name){
+	name_ = name;
+}
+void Person::addBook(Book * b){
+	book_[numbook_++] = b;
+}
+string Person::returnPersonName(){
+	return name_;
+}
+string Person::returnPersonNum(){
+	return num_;
+}
+
+//person.h
+#ifndef _PERSON_H_
+#define _PERSON_H_
+#include <string>
+#include "book.h"
+#define MAX_BOOK 100
+using namespace std;
+class Book;
+class Person {
+	// 공개 메소드
+	public:	
+		Person();  // 기본 생성자.
+		Person(string name, string num);
+		void summary();
+		void changeName(string name);
+		void addBook(Book *);
+		string returnPersonName();
+		string returnPersonNum();
+	// 상속할 함수 및 변수
+	protected:
+
+	// 멤버 변수 및 비공개 함수
+	private:
+		string name_;
+		string num_;
+		Book * book_[MAX_BOOK];
+		int numbook_ = 0;
+};
+#endif
