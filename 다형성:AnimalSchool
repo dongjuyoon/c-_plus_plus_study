@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Animal {
+public:
+    Animal(const char *name) : name_(name) {}
+    virtual void speak() {
+		//
+	}
+    virtual void sayName() const {
+        cout << "내이름은 " << name_ << "입니다." << endl;
+    }
+
+protected:
+    string name_;
+};
+
+class Cat : public Animal {
+public:
+    Cat(const char *name) : Animal(name) {}
+
+    void speak()  override {
+        cout << "야옹! ";
+        sayName();
+    }
+};
+
+class Dog : public Animal {
+public:
+    Dog(const char *name) : Animal(name) {}
+
+    void speak()  override {
+        cout << "멍멍! ";
+        sayName();
+    }
+};
+
+class AnimalSchool {
+public:
+    static const int MAXANI = 100;
+
+    void addAnimal(Animal *animal) {
+        if (numAnimals < MAXANI) {
+            animals[numAnimals++] = animal;
+        }
+    }
+
+    void callAllAnimals() const {
+        for (int i = 0; i < numAnimals; i++) {
+            animals[i]->speak();
+        }
+    }
+
+private:
+    Animal *animals[MAXANI];
+    int numAnimals = 0;
+};
+
+int main() {
+    AnimalSchool *s = new AnimalSchool();
+    s->addAnimal(new Cat("Kitty"));
+    s->addAnimal(new Cat("야옹이"));
+    s->addAnimal(new Dog("바둑이"));
+    s->addAnimal(new Dog("돌돌이"));
+    s->callAllAnimals();
+
+    return 0;
+}
+
