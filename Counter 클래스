@@ -1,0 +1,40 @@
+#include <iostream>
+
+
+using namespace std;
+
+
+struct Counter{
+	void tick(int & num){
+		num ++;
+	}
+
+	void reset(int & num){
+		num = 0;
+	}
+
+	void display(int & num){
+		cout << num << " ";
+	}
+};
+int main()
+{
+	Counter n;
+	int num;
+	int num2;
+	while(cin >> num){
+		if (num == 0){
+			n.reset(num2);
+			n.display(num2);
+		}
+		else if(num == 1){
+			n.tick(num2);
+			n.display(num2);
+		}
+		else{
+			cout << "END" << endl;
+			break;
+		}
+		
+	}
+}
