@@ -1,0 +1,127 @@
+//camera.cpp
+#include "camera.h"
+#include "lens.h"
+#include <iostream>
+using namespace std;
+Camera::Camera(){
+
+	// Default 생성자
+}
+
+Camera::Camera(std::string model){
+	modelName_= model;
+	lens_ = nullptr; //아직 없음.
+}
+void Camera::tellSpec(){
+	cout << "카메라: " << modelName_ << " , 렌즈: " ;
+	if( lens_ == nullptr){
+		cout << "없음\n";
+	} else {
+		cout << lens_ -> getModelName() << endl;
+	}
+}
+void Camera::attachLens(Lens *l){
+	lens_ = l;
+}
+
+std::string Camera::getModelName(){
+	return modelName_;
+}
+
+//camera.h
+#ifndef _CAMERA_H_
+#define _CAMERA_H_
+#include <string>
+#include <iostream>
+using namespace std;
+class Lens; 
+class Camera {
+	// 공개 메소드
+	public:	
+		Camera();  // 기본 생성자.
+		Camera(std::string model);
+		void tellSpec();
+		void attachLens(Lens *);
+		std::string getModelName();
+		// 상속할 함수 및 변수
+	protected:
+
+		// 멤버 변수 및 비공개 함수
+	private:
+		std::string modelName_;
+		Lens * lens_;
+};
+#endif
+
+//lens.cpp
+#include "lens.h"
+#include "camera.h"
+#include <iostream>
+using namespace std;
+Lens::Lens(){
+	// Default 생성자
+}
+Lens::Lens(std::string model){
+	modelName_ = model;
+	camera_ = nullptr;
+}
+void Lens::tellSpec(){
+	cout << "렌즈:" << modelName_ << " , 카메라 " ;
+	if( camera_ == nullptr){
+		cout << "없음\n";
+	}else{
+		cout << camera_ -> getModelName() << endl;
+	}
+}
+void Lens::attachCamera(Camera *c){
+	camera_ =c;
+}
+std::string Lens::getModelName(){
+	return modelName_;
+}
+
+//lens.h
+#ifndef _LENS_H_
+#define _LENS_H_
+#include <string>
+#include <iostream>
+using namespace std;
+
+
+class Camera;
+class Lens {
+	// 공개 메소드
+	public:	
+		Lens();  // 기본 생성자.
+
+		Lens(std::string model);
+		void tellSpec();
+		void attachCamera(Camera *);
+		std::string getModelName();
+		// 상속할 함수 및 변수
+	protected:
+
+		// 멤버 변수 및 비공개 함수
+	private:
+		std::string modelName_;
+		Camera * camera_;
+
+};
+#endif
+
+//main.cpp
+#include <iostream>
+using namespace std;
+#include "camera.h"
+#include "lens.h"
+int main(){
+	Camera *cam = new Camera("Canon R5");
+	Lens *lens = new Lens("Canon 200mm F4");
+	cam->tellSpec();   // 카메라: Canon R5 렌즈: 없음 으로 출력.
+	cam->attachLens(lens);  
+	lens->attachCamera(cam);
+	cam->tellSpec();   // 카메라: Canon R5 렌즈: Canon 200mm F4
+	lens->tellSpec();  // 렌즈: Canon 200mm F4  카메라: Canon R5 
+	delete cam;
+	delete lens;
+}
