@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Account{
+public:
+	void setAccountNumber(string nu){
+	number = nu;
+	}
+	void setOwnerName(string na){
+	name = na;
+	}
+	void setBalance(int re){
+	remain = 0;
+	}
+	void deposit(int plus){
+	remain = remain + plus;
+	}
+	void transferTo(Account * A ,int transfer){
+	remain = remain - transfer;
+	A -> remain = A->remain + transfer;
+	}
+	void withdraw(int with){
+	if( remain < with){
+		
+	} else{
+	remain = remain - with;
+	}
+	}
+	void showStatus(){
+	cout << number << endl<< name<< endl << remain<< endl;
+	}
+private:
+	string number;
+	string name;
+	int remain;
+};
+
+int main(){
+	Account *a, *b;
+	a = new Account();
+	b = new Account();
+	a->setAccountNumber("212-30-222333");
+	b->setAccountNumber("212-30-222444");
+	a->setOwnerName("김길동");
+	b->setOwnerName("홍길동");
+	a->setBalance(0);    // 잔고를 0으로 설정
+	b->setBalance(0);
+	a->deposit(10000);   // 입금
+	a->transferTo(b, 5000);   // b로 5000원 이체
+	a->withdraw(1000);   // 인출
+	a->showStatus();   // 계좌 정보를 전부 출력 - 계좌 번호  이름  잔고
+	b->withdraw(6000);    // 잔고가 충분치 않으면 부분 출금하지 말고 반환
+	b->showStatus();   // 계좌 정보를 전부 출력
+	return 0;
+}
