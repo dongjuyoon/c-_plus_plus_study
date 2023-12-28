@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cstdio>
+char msg[] = "존재하지 않는 스트링입니다.";
+
+
+void mystrprint(const char *s){
+
+	try{
+		if( s ==0){
+			throw s;
+		}
+
+		else{
+
+			printf("%s\n", s);
+		}
+	}
+	catch(const char *s){
+		printf("%s", msg);
+	}
+}
+
+
+
+
+void printName(const char *f, const char *l){
+	mystrprint(f); 
+	mystrprint(l);
+	std::cout << std::endl;
+}
+
+int main(){
+	char * firstname = (char *)"Lee";
+	char * lastname = 0;
+
+	printName(firstname, lastname);
+	return 0;
+}
