@@ -1,0 +1,202 @@
+//cd.cpp
+#include <iostream>
+#include "cd.h"
+CD::CD(std::string title){
+	title_ = title;
+}
+
+void CD::addSong(Song * s){
+	songptr[numSong++] = s;
+}
+
+Song* CD::getSong(int index) {
+    return songptr[index];
+}
+int CD::re_numSong() {
+	    return numSong;
+}
+
+//cd.h
+
+
+#ifndef _CD_H
+#define _CD_H
+#include <string>
+#define MAX_SONG 20
+#include "song.h"
+class CD{
+	public:
+		CD(std::string title);
+		void addSong(Song * s);
+		Song * getSong(int index);
+		int re_numSong();
+	private:
+		std::string title_;
+		//Song 포인터 배열 20개짜리.
+		Song * songptr[MAX_SONG];
+		int numSong = 0;
+		
+		
+
+};
+#endif
+
+//cdp_main.cpp
+#include <iostream>
+#include "song.h"
+#include "cdplayer.h"
+#include "cd.h"
+int main(){
+	Song * s1 = new Song("BTS", "the Song");
+	//s1 -> show();
+
+	CDPlayer mycdp;  // CD Player 클래스
+	CD * cd1;
+
+	// CD를 만든다.
+	cd1 = new CD("Map of the Soul:7");
+	cd1->addSong(new Song("BTS", "Make it right")); // 가수 및 곡명
+	cd1->addSong(new Song("BTS", "Jamais Vu"));
+	cd1->addSong(new Song("BTS", "Black Swan"));
+
+	cd1->getSong(0)->show(); 
+		
+		//  가수: BTS, 곡명: Make it right 
+	mycdp.play();    // CD가 없습니다.
+	
+	mycdp.insertCD(cd1);     
+	mycdp.showStatus();	// BTS  총 3 곡이 들어있습니다.
+	mycdp.play();    // 곡1. BTS의 Make it right가 play됩니다.
+	mycdp.nextTrack();	// 곡2. BTS의 Jamais Vu play됩니다.
+	mycdp.nextTrack();	// 곡3. BTS의 Black Swan가 play됩니다.
+	mycdp.nextTrack();	// 다음 트랙이 없습니다.
+	mycdp.prevTrack();	// 곡2. BTS의 Jamais Vu play됩니다.
+	mycdp.prevTrack();	// 곡1. BTS의 Make it right play됩니다.	
+	mycdp.prevTrack();	// 이전 트랙이 없습니다.
+	mycdp.ejectCD();  // 
+	mycdp.play();   // CD가 없습니다
+	
+}
+
+//cdplayer.cpp
+#include "cdplayer.h"
+#include "cd.h"
+#include <iostream>
+
+using namespace std;
+
+CDPlayer::CDPlayer() {
+	cd_ = nullptr;
+}
+
+void CDPlayer::insertCD(CD *c) {
+	cd_ = c;
+	numSong_ = 0;
+}
+void CDPlayer::play() {
+	if (cd_ == nullptr) {
+		cout << "CD가 없습니다." << endl;
+		return;
+	} else {
+		cout << "곡 " << numSong_ + 1 << " " << cd_->getSong(numSong_)->getSinger()
+			<< "의 " << cd_->getSong(numSong_)->getTitle() << "가 play 됩니다" << endl;
+	}
+}
+
+void CDPlayer::showStatus() {
+	cout << "총 " << cd_->re_numSong() << "곡이 들어있습니다." << endl;
+}
+
+void CDPlayer::nextTrack() {
+	if (cd_ == nullptr) {
+		cout << "CD가 없습니다." << endl;
+		return;
+	}
+	if (numSong_ >= cd_->re_numSong() - 1) {
+		cout << "다음 트랙이 없습니다." << endl;
+	} else {
+		numSong_++;
+		cout << "곡 " << numSong_ + 1 << " " << cd_->getSong(numSong_)->getSinger()
+			<< "의 " << cd_->getSong(numSong_)->getTitle() << "가 play 됩니다" << endl;
+	}
+}
+
+void CDPlayer::prevTrack() {
+	if (cd_ == nullptr) {
+		cout << "CD가 없습니다." << endl;
+		return;
+	}
+	if (numSong_ <= 0) {
+		cout << "이전 트랙이 없습니다." << endl;
+	} else {
+		numSong_--;
+		cout << "곡 " << numSong_ + 1 << " " << cd_->getSong(numSong_)->getSinger()
+			<< "의 " << cd_->getSong(numSong_)->getTitle() << "가 play 됩니다" << endl;
+	}
+}
+
+void CDPlayer::ejectCD() {
+	cd_ = nullptr;
+}
+
+
+//cdplayer.h
+#ifndef _CDP_H
+#define _CDP_H
+#include "cd.h"
+#define MAX_SONG 20
+#include <string>
+using namespace std;
+class CDPlayer{
+	public:
+		CDPlayer();
+		void insertCD(CD *c);
+		void play();
+		void showStatus();
+		void nextTrack();	
+		void prevTrack();	
+		void ejectCD();   
+	private:
+		CD * cd_;
+		int numSong_ =0;
+	
+
+};
+#endif
+
+//song.cpp
+#include <iostream>
+#include "song.h"
+using namespace std;
+Song::Song(string singer,string title ){
+	singer_ = singer;
+	title_ = title;
+}
+void Song::show(){
+	cout << "가수는:" << singer_ << "곡명은:" << title_ << endl;
+}
+string Song::getSinger() {
+	    return singer_;
+}
+
+string Song::getTitle() {
+	    return title_;
+}
+
+//song.h
+#ifndef _SONG_H
+#define _SONG_H
+#include <string>
+using namespace std;
+class Song{
+	public:
+		Song(string singer, string title);
+		void show();
+		string getSinger(); // 가수 정보를 반환하는 메소드 추가
+		string getTitle();  // 곡명 정보를 반환하는 메소드 추가
+
+	private:
+		string singer_;
+		string title_;
+};
+#endif
